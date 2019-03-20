@@ -15,7 +15,12 @@ export default class Menu extends Component {
         visibleLayersComponents.push(
           <VisibleLayer
             layer={layer}
+            key={layer.id}
             handleLayerOpacityChanged={this.props.handleLayerOpacityChanged}
+            handleRemoveLayerFromHighlight={this.props.handleRemoveLayerFromHighlight}
+            handleRaiseVisibleLayerOrder={this.props.handleRaiseVisibleLayerOrder}
+            handleLowerVisibleLayerOrder={this.props.handleLowerVisibleLayerOrder}
+            handleLayerToggleShow={this.props.handleLayerToggleShow}
           />
         );
       });

@@ -24,9 +24,10 @@ export default class CatalogueTopic extends Component {
       return null;
     }
     const wrappedChildren = (
-      <div className="catalogue-topic-children" key={"children_" + topic.label}>
+      <div className="catalogue-topic-children" key={"children_" + topic.id}>
         <CatalogueItemList
           items={topic.children}
+          key={topic.id}
           handleOnCatalogueLayerClick={this.props.handleOnCatalogueLayerClick}
         />
       </div>
@@ -35,7 +36,6 @@ export default class CatalogueTopic extends Component {
       <>
         <div
           className="catalogue-topic"
-          key={"topic_" + topic.label}
           onClick={this.handleTopicClick}
         >
           <Typography>

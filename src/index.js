@@ -41,6 +41,8 @@ class App extends React.Component {
     catalogueLayer.show = !catalogueLayer.show;
     if (catalogueLayer.show) {
       LayerService.addVisibleLayer(catalogueLayer.layerBodId);
+    } else {
+      LayerService.hideVisibleLayer(catalogueLayer.layerBodId);
     }
     this.setState({
       visibleLayers: LayerService.getVisibleLayers()
@@ -52,6 +54,39 @@ class App extends React.Component {
     this.forceUpdate();
   };
 
+  handleRemoveLayerFromHighlight = (layer) => {
+    LayerService.removeLayerIfVisible(layer);
+    const catalogueItem = CatalogueService.getCatalogueItemForLayerId(layer.id);
+    catalogueItem.show = false;
+    this.setState({
+      visibleLayers: LayerService.getVisibleLayers()
+    })
+  }
+
+  handleRaiseVisibleLayerOrder = (layer) => {
+    LayerService.raiseVisibleLayerOrder(layer);
+    this.setState({
+      visibleLayers: LayerService.getVisibleLayers()
+    })
+  }
+
+  handleLowerVisibleLayerOrder = (layer) => {
+    LayerService.lowerVisibleLayerOrder(layer);
+    this.setState({
+      visibleLayers: LayerService.getVisibleLayers()
+    })
+  }
+
+  handleLayerToggleShow = (layer) => {
+    const visibleLayer = LayerService.getVisibleLayer(layer.id);
+    visibleLayer.show = !visibleLayer.show;
+    const catalogueItem = CatalogueService.getCatalogueItemForLayerId(layer.id);
+    catalogueItem.show = visibleLayer.show;
+    this.setState({
+      visibleLayers: LayerService.getVisibleLayers()
+    })
+  }
+
   render = () => {
     return (
       <div className="App">
@@ -60,6 +95,10 @@ class App extends React.Component {
           visibleCatalogueItems={this.state.visibleCatalogueItems}
           handleOnCatalogueLayerClick={this.handleOnCatalogueLayerClick}
           handleLayerOpacityChanged={this.handleLayerOpacityChanged}
+          handleRemoveLayerFromHighlight={this.handleRemoveLayerFromHighlight}
+          handleRaiseVisibleLayerOrder={this.handleRaiseVisibleLayerOrder}
+          handleLowerVisibleLayerOrder={this.handleLowerVisibleLayerOrder}
+          handleLayerToggleShow={this.handleLayerToggleShow}
         />
         <DeckGLMap visibleLayers={this.state.visibleLayers} />
       </div>

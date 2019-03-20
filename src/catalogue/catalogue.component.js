@@ -9,13 +9,14 @@ export function createCategorieElement(child, handleOnCatalogueLayerClick) {
   if (child.category === "topic") {
     return (
       <CatalogueTopic
+        key={child.id}
         topic={child}
         handleOnCatalogueLayerClick={handleOnCatalogueLayerClick}
       />
     );
   } else if (child.category === "layer") {
     return (
-      <CatalogueLayer layer={child} handleClick={handleOnCatalogueLayerClick} />
+      <CatalogueLayer layer={child} key={child.id} handleClick={handleOnCatalogueLayerClick} />
     );
   } else {
     return null;

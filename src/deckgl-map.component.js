@@ -49,6 +49,9 @@ export default class DeckGLMap extends Component {
         }
       });
       this.state.visibleLayers.forEach(layer => {
+        if (!layer.show) {
+          return;
+        }
         if (layer.type === "wmts") {
           let timestamp = "current";
           if (layer.timestamps && layer.timestamps.length > 0) {
@@ -115,7 +118,7 @@ export default class DeckGLMap extends Component {
   };
 
   render() {
-    const { viewState, controller = true, baseMap = true } = this.props;
+    const { viewState, controller = true } = this.props;
     if (this.state.baseStyleJson) {
       return (
         <DeckGL

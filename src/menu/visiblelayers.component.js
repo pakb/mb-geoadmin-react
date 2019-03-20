@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/lab/Slider";
 
@@ -22,10 +21,6 @@ export default class VisibleLayer extends Component {
     e.stopPropagation();
   };
 
-  handleSliderChange = (e, value) => {
-    this.props.handleLayerOpacityChanged(this.state.layer, value);
-  };
-
   render = () => {
     const layer = this.state.layer;
     const catalogueItem = CatalogueService.getCatalogueItemForLayerId(layer.id);
@@ -40,28 +35,31 @@ export default class VisibleLayer extends Component {
             max={1}
             step={0.05}
             value={layer.opacity}
-            onChange={this.handleSliderChange}
+            onChange={(_, value) => this.props.handleLayerOpacityChanged(this.state.layer, value)}
           />
+          <Typography>
+            Position
+            &nbsp;
+            <i className="fas fa-angle-up" onClick={_ => this.props.handleRaiseVisibleLayerOrder(layer)}></i>
+            &nbsp;
+            <i className="fas fa-angle-down" onClick={_ => this.props.handleLowerVisibleLayerOrder(layer)}></i>
+          </Typography>
         </div>
       );
     }
     return (
       <div className="visible-layer">
-        <i
-          className={
-            "far " + (catalogueItem.show ? "fa-check-square" : "fa-square")
-          }
-        />
-        &nbsp;
-        {catalogueItem ? catalogueItem.label : null}
-        <span onClick={e => this.toggleLayerProperties(e, layer)}>
+        <Typography>
+          <i className="fas fa-times-circle" onClick={_ => this.props.handleRemoveLayerFromHighlight(layer)} />
           &nbsp;
-          <i className="fas fa-cog" />
-        </span>
-        <span onClick={e => this.removeLayerFromHighlight(e, layer)}>
+          <i className={"far " + (layer.show ? "fa-check-square" : "fa-square")} onClick={_ => this.props.handleLayerToggleShow(layer)} />
           &nbsp;
-          <i className="fas fa-trash" />
-        </span>
+          {catalogueItem ? catalogueItem.label : null}
+          <span onClick={e => this.toggleLayerProperties(e, layer)}>
+            &nbsp;
+            <i className="fas fa-cog" />
+          </span>
+        </Typography>
         {layerProperties}
       </div>
     );

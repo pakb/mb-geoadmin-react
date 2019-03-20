@@ -8,6 +8,6 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
-.visible-layer .fa-trash {
-  color: tomato;
+.visible-layer .layer-properties {
+  margin-bottom: 10px;
 }
