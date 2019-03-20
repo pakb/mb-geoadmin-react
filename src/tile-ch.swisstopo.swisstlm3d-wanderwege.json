@@ -1,0 +1,10 @@
+{
+  "tilejson": "2.0.0",
+  "name": "ch.swisstopo.swisstlm3d-wanderwege",
+  "description": "...",
+  "attribution": "© Data: <a target=\"new\" href=\"https://www.swisstopo.admin.ch/en/home.html\">swisstopo</a>",
+  "scheme": "xyz",
+  "tiles": [
+    "https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.swisstlm3d-wanderwege/default/current/2056/{x}/{y}/{z}.png"
+  ]
+}
