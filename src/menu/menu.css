@@ -11,3 +11,9 @@
 .visible-layer .layer-properties {
   margin-bottom: 10px;
 }
+.visible-layer p {
+  display: flex;
+}
+.visible-layer .fa-cog {
+  margin-left: auto;
+}

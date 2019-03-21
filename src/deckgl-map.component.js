@@ -117,6 +117,11 @@ export default class DeckGLMap extends Component {
     }
   };
 
+  onClick = (info, allInfos, event) => {
+    const lonlat = this.staticMap.getMap().unproject([event.offsetX, event.offsetY]);
+    console.log('click at', lonlat)
+  };
+
   render() {
     const { viewState, controller = true } = this.props;
     if (this.state.baseStyleJson) {
@@ -125,8 +130,10 @@ export default class DeckGLMap extends Component {
           initialViewState={this.state.viewport}
           viewState={viewState}
           controller={controller}
+          onLayerClick={ (info, allInfos, event) => this.onClick(info, allInfos, event) }
         >
           <StaticMap
+            ref={staticMap => this.staticMap = staticMap}
             reuseMaps
             mapStyle={this.buildStyleWithVisibleLayers(
               this.state.baseStyleJson
