@@ -1,25 +1,17 @@
 import React, { Component } from "react";
 import { StaticMap } from "react-map-gl";
 import DeckGL, { HexagonLayer } from "deck.gl";
-
 import cloneDeep from "lodash/cloneDeep";
 import * as d3 from "d3"
-import { Slide } from "@material-ui/core";
+
+import "mapbox-gl/dist/mapbox-gl.css"
 
 const MAPBOX_STYLE_URL =
-  "http://tileserver.int.bgdi.ch/gl-styles/ch.swisstopo.leichte-basiskarte.vt/v006_3d/style.json";
+  "https://tileserver.int.bgdi.ch/gl-styles/ch.swisstopo.leichte-basiskarte.vt/v006_3d/style.json";
 
   const DATA_URL =
   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv'; // eslint-disable-line
 
-  const LIGHT_SETTINGS = {
-    lightsPosition: [-0.144528, 49.739968, 8000, -3.807751, 54.104682, 8000],
-    ambientRatio: 0.4,
-    diffuseRatio: 0.6,
-    specularRatio: 0.2,
-    lightsStrength: [0.8, 0.0, 0.8, 0.0],
-    numberOfLights: 2
-  };
   const colorRange = [
     [1, 152, 189],
     [73, 227, 206],
@@ -188,7 +180,7 @@ export default class DeckGLMap extends Component {
 
   _onMapLoad = () => {
     const mapbox = this.staticMap.getMap();
-    mapbox.setLight({color: "#fff", intensity: 1, position: [1.15, 135, 45]});
+    mapbox.setLight({color: "#fff", intensity: 0.8, position: [1.15, 135, 45]});
     this.setState({lastZoomLevel: mapbox.getZoom()});
     mapbox.on('zoom', () => {
       const zoomLevel = mapbox.getZoom();
@@ -208,18 +200,12 @@ export default class DeckGLMap extends Component {
 
   render() {
     const { viewState, controller = true } = this.props;
-    // const directionalLight= new SunLight({
-    //   timestamp: Date.now(), 
-    //   color: [255, 0, 0],
-    //   intensity: 1
-    // });
     if (this.state.baseStyleJson) {
       return (
         <div>
           <DeckGL
             initialViewState={this.state.viewport}
             viewState={viewState}
-            // effects={[directionalLight]}
             controller={controller}
             onLayerClick={ (info, allInfos, event) => this.onClick(info, allInfos, event) }
             layers={this.getLayers()}
@@ -234,10 +220,6 @@ export default class DeckGLMap extends Component {
               onLoad={this._onMapLoad}
             />
           </DeckGL>
-          <div id="heatmap-controls">
-            max elev. ({this.state.maxElevation}) <input type="range" min="1" max="20000" step="10" value={this.state.maxElevation} onChange={(event) => this.setState({maxElevation: event.target.value})}></input>
-            elev. scale ({this.state.elevationScale}) <input type="range" min="0.1" max="10" step="0.1" value={this.state.elevationScale} onChange={(event) => this.setState({elevationScale: event.target.value})}></input>
-          </div>
         </div>
       );
     } else {
