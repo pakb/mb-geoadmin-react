@@ -18,7 +18,8 @@
     "react": "16.8.4",
     "react-dom": "16.8.4",
     "react-map-gl": "4.0.15",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "redux": "^4.0.1"
   },
   "devDependencies": {},
   "scripts": {
