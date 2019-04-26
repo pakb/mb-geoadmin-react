@@ -8,6 +8,7 @@
     "@material-ui/core": "3.9.2",
     "@material-ui/lab": "3.0.0-alpha.30",
     "d3": "^5.9.2",
+    "d3-request": "^1.0.5",
     "deck.gl": "6.4.5",
     "fast-deep-equal": "2.0.1",
     "gl-mat4": "1.2.0",
@@ -17,7 +18,7 @@
     "mapbox-gl": "latest",
     "react": "16.8.4",
     "react-dom": "16.8.4",
-    "react-map-gl": "4.0.15",
+    "react-map-gl": "4.1.2",
     "react-scripts": "2.1.8"
   },
   "devDependencies": {},
