@@ -9,9 +9,6 @@ import "mapbox-gl/dist/mapbox-gl.css"
 const MAPBOX_STYLE_URL =
   "https://tileserver.int.bgdi.ch/gl-styles/ch.swisstopo.leichte-basiskarte.vt/v006_3d/style.json";
 
-  const DATA_URL =
-  'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv'; // eslint-disable-line
-
   const colorRange = [
     [1, 152, 189],
     [73, 227, 206],
@@ -32,13 +29,7 @@ export default class DeckGLMap extends Component {
         lastLayerIdBeforeLabels: "boundary_"
       },
       viewport: {},
-      visibleLayers: props.visibleLayers,
-      layerData: undefined,
-      elevationScale: 5,
-      radius: 10,
-      coverage: 0.9,
-      maxElevation: 1000,
-      lastZoomLevel: 0
+      visibleLayers: props.visibleLayers
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -58,15 +49,6 @@ export default class DeckGLMap extends Component {
           }
         });
       });
-    fetch(DATA_URL)
-    .then(res => res.text())
-    .then(text => d3.csvParse(text))
-    .then(csv => {
-      console.log('response', csv);
-      this.setState({
-        layerData: csv.map(d => [Number(d.lng), Number(d.lat)])
-      })
-    });
   };
 
   buildStyleWithVisibleLayers = styleJson => {
@@ -92,7 +74,7 @@ export default class DeckGLMap extends Component {
           styleWithVisibleLayers.sources[layer.id] = {
             type: "raster",
             tiles: [
-              "https://wmts5.geo.admin.ch/1.0.0/" +
+              "https://wmts.geo.admin.ch/1.0.0/" +
                 layer.id +
                 "/default/" +
                 timestamp +
@@ -105,7 +87,7 @@ export default class DeckGLMap extends Component {
           styleWithVisibleLayers.sources[layer.id] = {
             type: "raster",
             tiles: [
-              "https://wms4.geo.admin.ch/?service=WMS&version=1.3.0&request=GetMap&format=image/png&transparent=true&layers=" +
+              "https://wms.geo.admin.ch/?service=WMS&version=1.3.0&request=GetMap&format=image/png&transparent=true&layers=" +
                 layer.id +
                 "&lang=en&width=256&height=256&crs=EPSG:3857&style=&bbox={bbox-epsg-3857}"
             ],
@@ -152,52 +134,6 @@ export default class DeckGLMap extends Component {
     console.log('click at', lonlat)
   };
 
-  getLayers = () => {
-    if (this.state.layerData) {
-      const {radius = 10, upperPercentile = 100, coverage = 0.9} = this.state;
-      console.log('radius', radius);
-      const data = this.state.layerData;
-      return [new HexagonLayer({
-        id: 'heatmap',
-        colorRange,
-        coverage,
-        data,
-        elevationRange: [10, this.state.maxElevation],
-        elevationScale: this.state.elevationScale,
-        extruded: true,
-        getPosition: d => d,
-        //lightSettings: LIGHT_SETTINGS,
-        onHover: this.props.onHover,
-        opacity: 0.1,
-        pickable: Boolean(this.props.onHover),
-        radius,
-        upperPercentile
-      })]
-    } else {
-      return [];
-    }
-  };
-
-  _onMapLoad = () => {
-    const mapbox = this.staticMap.getMap();
-    mapbox.setLight({color: "#fff", intensity: 0.8, position: [1.15, 135, 45]});
-    this.setState({lastZoomLevel: mapbox.getZoom()});
-    mapbox.on('zoom', () => {
-      const zoomLevel = mapbox.getZoom();
-      this.setState({lastZoomLevel: zoomLevel});
-      setTimeout(() => {
-        if (this.state.lastZoomLevel === zoomLevel) {
-          const newRadius = (zoomLevel * 1000.0) / Math.pow(2, zoomLevel - 5);
-          this.setState({
-            radius: newRadius,
-            maxElevation: Math.min(newRadius * (33.0 / zoomLevel), 20000),
-            coverage: zoomLevel > 12 ? 0.5 : 0.9
-          })
-        }
-      }, 400)
-    })
-  };
-
   render() {
     const { viewState, controller = true } = this.props;
     if (this.state.baseStyleJson) {
@@ -208,7 +144,6 @@ export default class DeckGLMap extends Component {
             viewState={viewState}
             controller={controller}
             onLayerClick={ (info, allInfos, event) => this.onClick(info, allInfos, event) }
-            layers={this.getLayers()}
           >
             <StaticMap
               ref={staticMap => this.staticMap = staticMap}
@@ -217,7 +152,6 @@ export default class DeckGLMap extends Component {
                 this.state.baseStyleJson
               )}
               preventStyleDiffing={false}
-              onLoad={this._onMapLoad}
             />
           </DeckGL>
         </div>
